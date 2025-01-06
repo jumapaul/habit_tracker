@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "502074644917",
+    "project_id": "habittracker-d54c4",
+    "storage_bucket": "habittracker-d54c4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502074644917:android:ef38f3e2fa5c1a347021fc",
+        "android_client_info": {
+          "package_name": "com.jumapaul.habit_track"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502074644917-u6n5cem9lbpj1hf47s50teii147mas5k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqlyFxMVAhESbqHHZEg9hGeO3AiPBHdcs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502074644917-u6n5cem9lbpj1hf47s50teii147mas5k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "502074644917-qsddmdpt9j7ksofnde7p614lk8h9a164.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jumapaul.habitTracker"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502074644917:android:cb50bf7114cfbefd7021fc",
+        "android_client_info": {
+          "package_name": "com.jumapaul.habit_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502074644917-u6n5cem9lbpj1hf47s50teii147mas5k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqlyFxMVAhESbqHHZEg9hGeO3AiPBHdcs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502074644917-u6n5cem9lbpj1hf47s50teii147mas5k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "502074644917-qsddmdpt9j7ksofnde7p614lk8h9a164.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jumapaul.habitTracker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

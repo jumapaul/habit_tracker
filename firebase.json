@@ -1,0 +1,15 @@
+{"flutter":{
+  "platforms":{
+    "android":{
+      "default":{
+        "projectId":"habittracker-d54c4",
+        "appId":"1:502074644917:android:ef38f3e2fa5c1a347021fc",
+        "fileOutput":"android/app/google-services.json"}
+    },
+    "ios":{
+      "default":{
+        "projectId":"habittracker-d54c4",
+        "appId":"1:502074644917:ios:f419dd6ff6283a5b7021fc",
+        "uploadDebugSymbols":false,
+        "fileOutput":"ios/Runner/GoogleService-Info.plist"}
+    },"macos":{"default":{"projectId":"habittracker-d54c4","appId":"1:502074644917:ios:f419dd6ff6283a5b7021fc","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"habittracker-d54c4","configurations":{"android":"1:502074644917:android:ef38f3e2fa5c1a347021fc","ios":"1:502074644917:ios:f419dd6ff6283a5b7021fc","macos":"1:502074644917:ios:f419dd6ff6283a5b7021fc","web":"1:502074644917:web:6e5ae3e2db74f7807021fc","windows":"1:502074644917:web:3e4d89bad75e6d347021fc"}}}}}}
