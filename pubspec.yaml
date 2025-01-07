@@ -18,6 +18,8 @@ dependencies:
   google_sign_in: ^6.2.2
   get: ^4.6.6
   fluttertoast: ^8.2.10
+  shared_preferences: ^2.3.2
+  intl: ^0.18.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

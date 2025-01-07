@@ -2,17 +2,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:habit_tracker/app/common/custom_theme/container_border_theme.dart';
 
 import 'app/common/dimens/dimens.dart';
 import 'app/routes/app_pages.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final initialRoute = await AppPages.getInitialRoute();
   await Firebase.initializeApp();
   runApp(
     GetMaterialApp(
       title: "Application",
-      initialRoute: AppPages.INITIAL,
+      initialRoute: initialRoute,
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.system,
@@ -65,7 +67,11 @@ void main() async {
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(color: Colors.black87, width: 1),
             ),
-          )),
+          ),
+          extensions: [
+            ContainerBorderTheme(
+                border: Border.all(color: Colors.grey.shade300, width: 1))
+          ]),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.lightBlue,
@@ -123,6 +129,10 @@ void main() async {
             borderSide: const BorderSide(color: Colors.white70, width: 1),
           ),
         ),
+          extensions: [
+            ContainerBorderTheme(
+                border: Border.all(color: Colors.white, width: 1))
+          ]
       ),
     ),
   );

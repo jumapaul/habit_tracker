@@ -9,11 +9,17 @@ const extraLargeSize = 30.0;
 const extraExtraLargeSize = 40.0;
 
 class AppTextStyles {
+  static var largeHeaderStyle =
+      TextStyle(fontSize: extraLargeSize, fontWeight: FontWeight.bold);
   static var headerStyle = TextStyle(
     fontSize: largeSize,
     fontWeight: FontWeight.bold,
   );
 
+  static var largeSubHeaderStyle = TextStyle(
+    fontSize: mediumSize,
+    fontWeight: FontWeight.w500,
+  );
   static var subHeaderStyle = TextStyle(
     fontSize: normalSize,
     fontWeight: FontWeight.w500,

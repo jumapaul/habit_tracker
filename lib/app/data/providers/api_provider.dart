@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:get/get.dart';
 import 'package:habit_tracker/app/common/utils/show_toast.dart';
-
+import 'package:habit_tracker/app/data/models/habit_activity.dart';
 import '../../routes/app_pages.dart';
+import '../models/habit.dart';
 
 class ApiProvider extends GetConnect {
   static FirebaseAuth auth = FirebaseAuth.instance;
@@ -38,7 +39,7 @@ class ApiProvider extends GetConnect {
         password: password,
       );
       Get.snackbar('Success', 'Login successful');
-      Get.offAllNamed(Routes.MAIN);
+      Get.offAllNamed(Routes.SELECT_HABITS);
       return userCredential.user;
     } catch (e) {
       Get.snackbar('Error', e.toString());
@@ -78,7 +79,7 @@ class ApiProvider extends GetConnect {
           await auth.signInWithCredential(credential);
 
       Get.snackbar('Success', 'Successfully logged in');
-      Get.offAllNamed(Routes.MAIN);
+      Get.offAllNamed(Routes.SELECT_HABITS);
       return userCredential.user;
     } catch (e) {
       Get.snackbar('Error', e.toString());
@@ -86,63 +87,147 @@ class ApiProvider extends GetConnect {
     }
   }
 
-  Future<void> createHabit(
-      String userId, Map<String, dynamic> habitData) async {
+  Future<List<HabitTypes>?> getDefaultHabits() async {
     try {
-      await firestore
-          .collection('users')
-          .doc(userId)
-          .collection('habits')
-          .add(habitData);
-      Get.snackbar('Success', 'Habit created successfully!');
-    } catch (e) {
-      Get.snackbar('Error', e.toString());
-    }
-  }
+      final snapShot =
+          await FirebaseFirestore.instance.collection('habits').get();
 
-  Future<void> updateHabit(
-      String userId, String habitId, Map<String, dynamic> habitData) async {
-    try {
-      await firestore
-          .collection('users')
-          .doc(userId)
-          .collection('habits')
-          .doc(habitId)
-          .update(habitData);
-      Get.snackbar('Success', 'Habit updated successfully!');
-    } catch (e) {
-      Get.snackbar('Error', e.toString());
-    }
-  }
-
-  Future<void> deleteHabit(String userId, String habitId) async {
-    try {
-      await firestore
-          .collection('users')
-          .doc(userId)
-          .collection('habits')
-          .doc(habitId)
-          .delete();
-      Get.snackbar('Success', 'Habit deleted successfully!');
-    } catch (e) {
-      Get.snackbar('Error', e.toString());
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> getHabits(String userId) async {
-    try {
-      final QuerySnapshot querySnapshot = await firestore
-          .collection('users')
-          .doc(userId)
-          .collection('habits')
-          .get();
-
-      return querySnapshot.docs
-          .map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>})
+      print('Number of docs --------->${snapShot.docs.length}');
+      return snapShot.docs
+          .map((doc) => HabitTypes.fromJson(doc.data(), docId: doc.id))
           .toList();
     } catch (e) {
       Get.snackbar('Error', e.toString());
-      return [];
+      print('----------> the error is ${e.toString()}');
+      return null;
     }
   }
+
+  Future<void> uploadSelectedHabits(List<HabitTypes> selectedHabits) async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+
+      final habitsRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('selected_habits');
+
+      final batch = FirebaseFirestore.instance.batch();
+
+      for (var habit in selectedHabits) {
+        final newHabit = habit.copyWith(id: userId);
+        final docRef = habitsRef.doc();
+        batch.set(docRef, newHabit.toJson());
+      }
+
+      await batch.commit();
+      Get.offAllNamed(Routes.MAIN);
+    } catch (error) {
+      Get.snackbar('error', error.toString());
+    }
+  }
+
+  Future<List<HabitTypes>?> getSelectedHabits() async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      final selectedHabitsRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('selected_habits');
+
+      final selectedHabitsSnapshot = await selectedHabitsRef.get();
+
+      return selectedHabitsSnapshot.docs
+          .map((doc) => HabitTypes.fromJson(doc.data(), docId: doc.id))
+          .toList();
+    } catch (e) {
+      Get.snackbar('error', e.toString());
+      return null;
+    }
+  }
+
+  Future<void> createActivity(String userId, HabitActivity activity) async {
+    try {
+      await firestore
+          .collection('activities')
+          .doc(userId)
+          .collection('daily_activities')
+          .add(activity.toJson());
+      Get.back();
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
+  }
+
+  Future<List<HabitActivity>?> getActivitiesByDate(
+      String userId, DateTime date) async {
+    try {
+      print('Date here =======> $date');
+      String formattedDate = '${date.toLocal()}'.split(' ')[0];
+      print('--------->formattedDate $formattedDate');
+
+      QuerySnapshot querySnapshot = await firestore
+          .collection('activities')
+          .doc(userId)
+          .collection('daily_activities')
+          .where('activity_date', isEqualTo: formattedDate)
+          .get();
+
+      List<HabitActivity> activities = querySnapshot.docs
+          .map((doc) =>
+              HabitActivity.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      return activities;
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+      return null;
+    }
+  }
+
+// Future<void> updateHabit(
+//     String userId, String habitId, Map<String, dynamic> habitData) async {
+//   try {
+//     await firestore
+//         .collection('users')
+//         .doc(userId)
+//         .collection('habits')
+//         .doc(habitId)
+//         .update(habitData);
+//     Get.snackbar('Success', 'Habit updated successfully!');
+//   } catch (e) {
+//     Get.snackbar('Error', e.toString());
+//   }
+// }
+//
+// Future<void> deleteHabit(String userId, String habitId) async {
+//   try {
+//     await firestore
+//         .collection('users')
+//         .doc(userId)
+//         .collection('habits')
+//         .doc(habitId)
+//         .delete();
+//     Get.snackbar('Success', 'Habit deleted successfully!');
+//   } catch (e) {
+//     Get.snackbar('Error', e.toString());
+//   }
+// }
+//
+// Future<List<Map<String, dynamic>>> getHabits(String userId) async {
+//   try {
+//     final QuerySnapshot querySnapshot = await firestore
+//         .collection('users')
+//         .doc(userId)
+//         .collection('habits')
+//         .get();
+//
+//     return querySnapshot.docs
+//         .map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>})
+//         .toList();
+//   } catch (e) {
+//     Get.snackbar('Error', e.toString());
+//     return [];
+//   }
+// }
 }

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:habit_tracker/app/data/providers/shared_preference.dart';
 
 import '../modules/auth/sign_in/bindings/sign_in_binding.dart';
 import '../modules/auth/sign_in/views/sign_in_view.dart';
@@ -22,7 +23,14 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.SIGN_IN;
+  static const signIn = Routes.SIGN_IN;
+  static const main =Routes.MAIN;
+
+  static Future<String> getInitialRoute() async{
+    final startDestinationHome = await SharedPreferenceHelper.getStartDestination();
+
+    return startDestinationHome ? main: signIn;
+  }
 
   static final routes = [
     GetPage(

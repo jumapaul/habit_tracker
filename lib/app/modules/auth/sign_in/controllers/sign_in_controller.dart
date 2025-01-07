@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:habit_tracker/app/common/utils/show_toast.dart';
 import 'package:habit_tracker/app/common/utils/validations.dart';
+import 'package:habit_tracker/app/data/models/habit.dart';
 import 'package:habit_tracker/app/data/providers/api_provider.dart';
 import 'package:habit_tracker/app/routes/app_pages.dart';
 
@@ -16,9 +17,11 @@ class SignInController extends GetxController {
   Rxn<String>? confirmErrorMessage = Rxn();
   Rxn<String>? passwordErrorMessage = Rxn();
   final Rx<RxStatus> _status = Rx<RxStatus>(RxStatus.empty());
-  final ApiProvider apiProvider = ApiProvider();
 
   RxStatus get status => _status.value;
+
+  final ApiProvider apiProvider = ApiProvider();
+  var selectedHabits = RxList<HabitTypes>();
 
   Future<User?> signIn() async {
     bool passwordValid = Validations.isPasswordValid(
@@ -29,6 +32,7 @@ class SignInController extends GetxController {
     if (emailValid && passwordValid) {
       final user = apiProvider.signInWithEmail(
           emailAddressController.text, passwordController.text);
+
       return user;
     }
     return null;
@@ -51,6 +55,11 @@ class SignInController extends GetxController {
     final user = await apiProvider.signInWithGoogle();
 
     return user;
+  }
+
+  Future<void> getSelectedHabits() async {
+    var habits = await apiProvider.getSelectedHabits();
+    selectedHabits.value = habits!;
   }
 
   @override

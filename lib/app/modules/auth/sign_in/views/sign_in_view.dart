@@ -35,7 +35,7 @@ class SignInView extends GetView<SignInController> {
                         fontWeight: FontWeight.bold, fontSize: largeSize),
                   ),
                   const SizedBox(height: extraLargeSize),
-                  InputTextFieldWidget(
+                  OutlinedInputTextFieldWidget(
                     hintText: 'Email Address',
                     labelText: "Email address",
                     errorText: controller.emailErrorMessage?.value,
@@ -111,7 +111,7 @@ class SignInView extends GetView<SignInController> {
             children: [
               Text('Enter reset email'),
               AppTextStyles.mediumVerticalSpacing,
-              InputTextFieldWidget(
+              OutlinedInputTextFieldWidget(
                 hintText: 'Enter email',
                 labelText: 'Email address',
                 editingController: controller.resetEmailController,

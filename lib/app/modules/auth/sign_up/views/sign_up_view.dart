@@ -46,7 +46,7 @@ class SignUpView extends GetView<SignUpController> {
                       style: AppTextStyles.subHeaderStyle,
                     ),
                     const SizedBox(height: mediumSize),
-                    InputTextFieldWidget(
+                    OutlinedInputTextFieldWidget(
                       hintText: "Input Email Address",
                       labelText: "Email address",
                       errorText: controller.emailErrorMessage?.value,
