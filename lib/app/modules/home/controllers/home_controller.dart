@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:habit_tracker/app/data/models/habit.dart';
 import 'package:habit_tracker/app/data/models/habit_activity.dart';
@@ -27,42 +28,55 @@ class HomeController extends GetxController {
     habitsCategory.value = selectedHabits!;
   }
 
-  uploadActivity() {
+  uploadActivity(BuildContext context) async {
     var userId = FirebaseAuth.instance.currentUser?.uid;
-    var body = HabitActivity(
-        activityTitle: habitTitleController.text,
-        activityCategory: categoryController.text,
-        activityCategoryIcon: categoryIcon.value,
-        activityDesc: habitDescriptionController.text,
-        activityDate: dateController.text,
-        activityFromTime: fromTimeController.text,
-        activityToTime: toTimeController.text,
-        userId: userId!);
-    apiProvider.createActivity(userId, body).then((value) {
-      clearController();
-      Get.back();
+
+    if (habitTitleController.text.isNotEmpty &&
+        categoryController.text.isNotEmpty &&
+        dateController.text.isNotEmpty &&
+        fromTimeController.text.isNotEmpty &&
+        toTimeController.text.isNotEmpty) {
+      var body = HabitActivity(
+          activityTitle: habitTitleController.text,
+          activityCategory: categoryController.text,
+          activityCategoryIcon: categoryIcon.value,
+          activityDesc: habitDescriptionController.text,
+          activityDate: dateController.text,
+          activityFromTime: fromTimeController.text,
+          activityToTime: toTimeController.text,
+          userId: userId!,
+          isCompleted: false);
+      await apiProvider.createActivity(userId, body).then((value) {
+        fetchActivities();
+        clearController();
+        Get.back();
+      });
+    } else {
+      Fluttertoast.showToast(
+          msg: 'Ensure you fill all the fields', gravity: ToastGravity.BOTTOM);
+    }
+  }
+
+  updateActivity(String docId, bool isComplete, String acivityTitle) async {
+    var userId = FirebaseAuth.instance.currentUser?.uid;
+
+    await apiProvider
+        .updateActivity(userId!, docId, isComplete, acivityTitle)
+        .then((_) {
+      fetchActivities();
     });
   }
 
   void fetchActivities() async {
-    print('============>called');
     var userId = FirebaseAuth.instance.currentUser!.uid;
-    String formattedDate = '${selectedDate.value.toLocal()}'.split(' ')[0];
-
-    print('------------>Formatted date');
     var activities =
         await apiProvider.getActivitiesByDate(userId, selectedDate.value);
 
-    print('----------->activities $activities');
     if (activities != null) {
       dailyActivity.value = activities;
     } else {
       dailyActivity.value = [];
     }
-  }
-
-  void selectDate(DateTime date) {
-    selectedDate.value = DateTime(date.year, date.month, date.day);
   }
 
   void dissectCurrentDay() {

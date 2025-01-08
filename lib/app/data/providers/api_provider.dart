@@ -148,12 +148,31 @@ class ApiProvider extends GetConnect {
 
   Future<void> createActivity(String userId, HabitActivity activity) async {
     try {
-      await firestore
+      DocumentReference docRef = await firestore
           .collection('activities')
           .doc(userId)
           .collection('daily_activities')
           .add(activity.toJson());
-      Get.back();
+
+      activity.docId = docRef.id;
+      await docRef.update({'doc_id': activity.docId});
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
+  }
+
+  Future<void> updateActivity(String userId, String docId, bool isComplete,
+      String activityTitle) async {
+    try {
+      await firestore
+          .collection('activities')
+          .doc(userId)
+          .collection('daily_activities')
+          .doc(docId)
+          .update({'is_completed': isComplete});
+      if (isComplete) {
+        Get.snackbar('Success', 'Congratulation on completing $activityTitle');
+      }
     } catch (e) {
       Get.snackbar('Error', e.toString());
     }
@@ -162,9 +181,12 @@ class ApiProvider extends GetConnect {
   Future<List<HabitActivity>?> getActivitiesByDate(
       String userId, DateTime date) async {
     try {
-      print('Date here =======> $date');
-      String formattedDate = '${date.toLocal()}'.split(' ')[0];
-      print('--------->formattedDate $formattedDate');
+      final localMidnight =
+          DateTime(date.year, date.month, date.day, 0, 0, 0, 0).toLocal();
+
+      String formattedDate = "${localMidnight.year}-"
+          "${localMidnight.month.toString().padLeft(2, '0')}-"
+          "${localMidnight.day.toString().padLeft(2, '0')}";
 
       QuerySnapshot querySnapshot = await firestore
           .collection('activities')
@@ -184,21 +206,6 @@ class ApiProvider extends GetConnect {
       return null;
     }
   }
-
-// Future<void> updateHabit(
-//     String userId, String habitId, Map<String, dynamic> habitData) async {
-//   try {
-//     await firestore
-//         .collection('users')
-//         .doc(userId)
-//         .collection('habits')
-//         .doc(habitId)
-//         .update(habitData);
-//     Get.snackbar('Success', 'Habit updated successfully!');
-//   } catch (e) {
-//     Get.snackbar('Error', e.toString());
-//   }
-// }
 //
 // Future<void> deleteHabit(String userId, String habitId) async {
 //   try {

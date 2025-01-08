@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:habit_tracker/app/common/custom_theme/container_border_theme.dart';
 import 'package:habit_tracker/app/common/dimens/dimens.dart';
 import 'package:habit_tracker/app/data/models/habit.dart';
+import 'package:habit_tracker/app/data/models/habit_activity.dart';
 import 'package:habit_tracker/app/modules/auth/widgets/outlined_input_text_widget.dart';
 import 'package:habit_tracker/app/modules/common_widget/outlined_button_widget.dart';
 import 'package:intl/intl.dart';
-
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -56,11 +55,7 @@ class HomeView extends GetView<HomeController> {
                             var singleHabit = activities[index];
 
                             return _buildActivityWidget(
-                                singleHabit.activityCategoryIcon,
-                                singleHabit.activityTitle,
-                                singleHabit.activityFromTime,
-                                singleHabit.activityToTime,
-                                context);
+                                singleHabit, context, singleHabit.isCompleted);
                           })
                 ],
               );
@@ -70,7 +65,7 @@ class HomeView extends GetView<HomeController> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _buildAddHabitDialog(controller.habitsCategory, context);
+          _buildAddHabitBottomSheet(controller.habitsCategory, context);
         },
         child: Icon(Icons.add),
       ),
@@ -109,18 +104,22 @@ class HomeView extends GetView<HomeController> {
                       controller.selectedDate.value.day == date.day;
               return GestureDetector(
                 onTap: () {
+                  controller.selectedDate.value = date;
                   controller.fetchActivities();
-                  controller.selectDate(date);
                 },
                 child: AnimatedContainer(
                   duration: Duration(milliseconds: 300),
                   margin: EdgeInsets.symmetric(horizontal: 8),
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   decoration: BoxDecoration(
-                      color: isSelected ? Colors.orange : Colors.white,
+                      color: isSelected
+                          ? Theme.of(context).primaryColor.withOpacity(0.2)
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                          color: isSelected ? Colors.orange : Colors.white,
+                          color: isSelected
+                              ? Theme.of(context).primaryColor.withOpacity(0.2)
+                              : Colors.white,
                           width: 1)),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -145,10 +144,10 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  _buildAddHabitDialog(List<HabitTypes> habits, BuildContext context) {
-    return Get.dialog(Dialog(
-      insetPadding: EdgeInsets.all(20),
-      child: Container(
+  _buildAddHabitBottomSheet(List<HabitTypes> habits, BuildContext context) {
+    return Get.bottomSheet(
+      backgroundColor: Colors.white,
+      Container(
         width: double.infinity,
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -213,15 +212,12 @@ class HomeView extends GetView<HomeController> {
                 Row(
                   children: [
                     Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: OutlinedButtonWidget(
-                          onClick: () {
-                            controller.clearController();
-                            Get.back();
-                          },
-                          name: 'Cancel',
-                        ),
+                      child: OutlinedButtonWidget(
+                        onClick: () {
+                          controller.clearController();
+                          Get.back();
+                        },
+                        name: 'Cancel',
                       ),
                     ),
                     Expanded(
@@ -229,7 +225,7 @@ class HomeView extends GetView<HomeController> {
                         padding: EdgeInsets.only(left: 8.0),
                         child: OutlinedButtonWidget(
                           onClick: () {
-                            controller.uploadActivity();
+                            controller.uploadActivity(context);
                           },
                           name: 'Add',
                         ),
@@ -242,13 +238,13 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
       ),
-    ));
+    );
   }
 
   _buildDropDownMenuForCategory(List<HabitTypes> habits, BuildContext context) {
     return DropdownMenu<HabitTypes>(
         controller: controller.categoryController,
-        width: MediaQuery.of(context).size.width * 0.85,
+        width: double.infinity,
         hintText: 'Select Category',
         requestFocusOnTap: true,
         enableFilter: true,
@@ -270,25 +266,46 @@ class HomeView extends GetView<HomeController> {
   }
 
   _buildActivityWidget(
-      String imageUrl, activityTitle, from, to, BuildContext context) {
+      HabitActivity activity, BuildContext context, bool? isComplete) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Theme.of(context).extension<ContainerBorderTheme>()!.border,
       ),
       height: 200,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
         children: [
-          SizedBox(height: 100, width: 100, child: Image.network(imageUrl)),
-          Text(
-            activityTitle,
-            style: AppTextStyles.headerStyle,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                  height: 70,
+                  width: 70,
+                  child: Image.network(activity.activityCategoryIcon)),
+              Text(
+                activity.activityTitle,
+                style: AppTextStyles.largeSubHeaderStyle,
+              ),
+              AppTextStyles.mediumVerticalSpacing,
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Text(
+                  'Time: ${activity.activityFromTime} to ${activity.activityToTime}',
+                  style: AppTextStyles.subHeaderStyle,
+                ),
+              )
+            ],
           ),
-          AppTextStyles.mediumVerticalSpacing,
-          Text(
-            '$from to $to',
-            style: AppTextStyles.subHeaderStyle,
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Checkbox(
+              value: isComplete,
+              onChanged: (value) {
+                controller.updateActivity(
+                    activity.docId!, value!, activity.activityTitle);
+              },
+            ),
           )
         ],
       ),
