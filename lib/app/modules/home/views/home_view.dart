@@ -6,6 +6,7 @@ import 'package:habit_tracker/app/data/models/habit.dart';
 import 'package:habit_tracker/app/data/models/habit_activity.dart';
 import 'package:habit_tracker/app/modules/auth/widgets/outlined_input_text_widget.dart';
 import 'package:habit_tracker/app/modules/common_widget/outlined_button_widget.dart';
+import 'package:habit_tracker/app/services/notification_service.dart';
 import 'package:intl/intl.dart';
 import '../controllers/home_controller.dart';
 
@@ -30,9 +31,20 @@ class HomeView extends GetView<HomeController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      _buildTopBarIcons(Icons.add_chart_rounded, context),
+                      GestureDetector(
+                        onTap: () {
+                          DateTime scheduleDate =
+                              DateTime.now().add(Duration(seconds: 3));
+                          NotificationService.scheduleNotification(
+                              'Time', 'Get ready', scheduleDate);
+                        },
+                        child: _buildTopBarIcons(Icons.person, context),
+                      ),
                       Text(controller.currentDay.value),
-                      _buildTopBarIcons(Icons.calendar_month, context)
+                      GestureDetector(
+                        onTap: () => controller.selectViewDate(context),
+                        child: _buildTopBarIcons(Icons.calendar_month, context),
+                      )
                     ],
                   ),
                   AppTextStyles.mediumVerticalSpacing,

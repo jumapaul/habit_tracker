@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:habit_tracker/app/common/custom_theme/container_border_theme.dart';
+import 'package:habit_tracker/app/services/notification_service.dart';
 
 import 'app/common/dimens/dimens.dart';
 import 'app/routes/app_pages.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final initialRoute = await AppPages.getInitialRoute();
   await Firebase.initializeApp();
+  await NotificationService.init();
+  tz.initializeTimeZones();
   runApp(
     GetMaterialApp(
       title: "Application",

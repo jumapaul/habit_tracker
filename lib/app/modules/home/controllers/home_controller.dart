@@ -99,6 +99,7 @@ class HomeController extends GetxController {
         });
 
     DateTime dateToAssign = selected ?? DateTime.now();
+    selectedDate.value = dateToAssign;
     dateController.text = "${dateToAssign.toLocal()}".split(' ')[0];
   }
 
@@ -116,6 +117,17 @@ class HomeController extends GetxController {
     final String formattedMinutes = timeToUse.minute.toString().padLeft(2, '0');
 
     editText.text = '$formattedHour:$formattedMinutes';
+  }
+
+  selectViewDate(BuildContext context) async {
+    var date = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2050));
+
+    selectedDate.value = date ?? DateTime.now();
+    fetchActivities();
   }
 
   clearController() {
