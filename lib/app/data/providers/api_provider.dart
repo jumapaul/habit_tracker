@@ -206,35 +206,73 @@ class ApiProvider extends GetConnect {
       return null;
     }
   }
-//
-// Future<void> deleteHabit(String userId, String habitId) async {
-//   try {
-//     await firestore
-//         .collection('users')
-//         .doc(userId)
-//         .collection('habits')
-//         .doc(habitId)
-//         .delete();
-//     Get.snackbar('Success', 'Habit deleted successfully!');
-//   } catch (e) {
-//     Get.snackbar('Error', e.toString());
-//   }
-// }
-//
-// Future<List<Map<String, dynamic>>> getHabits(String userId) async {
-//   try {
-//     final QuerySnapshot querySnapshot = await firestore
-//         .collection('users')
-//         .doc(userId)
-//         .collection('habits')
-//         .get();
-//
-//     return querySnapshot.docs
-//         .map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>})
-//         .toList();
-//   } catch (e) {
-//     Get.snackbar('Error', e.toString());
-//     return [];
-//   }
-// }
+
+  Future<List<HabitActivity>?> getActivityByWeek(
+      String userId, DateTime weekEnd) async {
+    try {
+      final weekStart = weekEnd.subtract(Duration(days: 6));
+
+      String endDate = "${weekEnd.year}-"
+          "${weekEnd.month.toString().padLeft(2, '0')}-"
+          "${weekEnd.day.toString().padLeft(2, '0')}";
+
+      String startDate = "${weekStart.year}-"
+          "${weekStart.month.toString().padLeft(2, '0')}-"
+          "${weekStart.day.toString().padLeft(2, '0')}";
+
+      QuerySnapshot querySnapshot = await firestore
+          .collection('activities')
+          .doc(userId)
+          .collection('daily_activities')
+          .where('activity_date', isGreaterThanOrEqualTo: startDate)
+          .where('activity_date', isLessThanOrEqualTo: endDate)
+          .get();
+
+      List<HabitActivity> activities = querySnapshot.docs
+          .map((doc) =>
+              HabitActivity.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      return activities;
+    } catch (error) {
+      Get.snackbar('Error', error.toString());
+      return null;
+    }
+  }
+
+  Future<List<HabitActivity>?> getActivityByMonth(
+      String userId, DateTime currentDate) async {
+    try {
+      final firstDayOfMonth = DateTime(currentDate.year, currentDate.month, 1);
+      final lastDayOfMonth = DateTime(
+          currentDate.year, currentDate.month + 1, 0);
+
+      String startDate = "${firstDayOfMonth.year}-"
+          "${firstDayOfMonth.month.toString().padLeft(2, '0')}-"
+          "${firstDayOfMonth.day.toString().padLeft(2, '0')}";
+
+      String endDate = "${lastDayOfMonth.year}-"
+          "${lastDayOfMonth.month.toString().padLeft(2, '0')}-"
+          "${lastDayOfMonth.day.toString().padLeft(2, '0')}";
+
+      QuerySnapshot querySnapshot = await firestore
+          .collection('activities')
+          .doc(userId)
+          .collection('daily_activities')
+          .where('activity_date', isGreaterThanOrEqualTo: startDate)
+          .where('activity_date', isLessThanOrEqualTo: endDate)
+          .get();
+
+      List<HabitActivity> activities = querySnapshot.docs
+          .map((doc) =>
+          HabitActivity.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      return activities;
+    } catch (error) {
+      Get.snackbar('Error', error.toString());
+      return null;
+    }
+  }
+
 }

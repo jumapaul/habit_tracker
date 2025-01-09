@@ -24,12 +24,13 @@ class AppPages {
   AppPages._();
 
   static const signIn = Routes.SIGN_IN;
-  static const main =Routes.MAIN;
+  static const main = Routes.MAIN;
 
-  static Future<String> getInitialRoute() async{
-    final startDestinationHome = await SharedPreferenceHelper.getStartDestination();
+  static Future<String> getInitialRoute() async {
+    final startDestinationHome =
+        await SharedPreferenceHelper.getStartDestination();
 
-    return startDestinationHome ? main: signIn;
+    return startDestinationHome ? main : signIn;
   }
 
   static final routes = [
@@ -54,10 +55,9 @@ class AppPages {
       binding: MainBinding(),
     ),
     GetPage(
-      name: _Paths.STATS,
-      page: () => const StatsView(),
-      binding: StatsBinding(),
-    ),
+        name: _Paths.STATS,
+        page: () => const StatsView(),
+        binding: StatsBinding()),
     GetPage(
       name: _Paths.SIGN_IN,
       page: () => const SignInView(),
