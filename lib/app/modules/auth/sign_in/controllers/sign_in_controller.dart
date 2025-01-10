@@ -5,6 +5,7 @@ import 'package:habit_tracker/app/common/utils/show_toast.dart';
 import 'package:habit_tracker/app/common/utils/validations.dart';
 import 'package:habit_tracker/app/data/models/habit.dart';
 import 'package:habit_tracker/app/data/providers/api_provider.dart';
+import 'package:habit_tracker/app/data/providers/shared_preference.dart';
 import 'package:habit_tracker/app/routes/app_pages.dart';
 
 class SignInController extends GetxController {
@@ -61,6 +62,7 @@ class SignInController extends GetxController {
     var habits = await apiProvider.getSelectedHabits();
     selectedHabits.value = habits!;
   }
+
 
   @override
   void onInit() {

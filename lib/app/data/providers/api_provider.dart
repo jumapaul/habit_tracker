@@ -4,6 +4,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:get/get.dart';
 import 'package:habit_tracker/app/common/utils/show_toast.dart';
 import 'package:habit_tracker/app/data/models/habit_activity.dart';
+import 'package:habit_tracker/app/data/providers/shared_preference.dart';
+import 'package:habit_tracker/app/services/notification_service.dart';
 import '../../routes/app_pages.dart';
 import '../models/habit.dart';
 
@@ -39,12 +41,20 @@ class ApiProvider extends GetConnect {
         password: password,
       );
       Get.snackbar('Success', 'Login successful');
-      Get.offAllNamed(Routes.SELECT_HABITS);
+      bool navigateHome = await sharedPrefState();
+
+      navigateHome
+          ? Get.offAllNamed(Routes.MAIN)
+          : Get.offAllNamed(Routes.SELECT_HABITS);
       return userCredential.user;
     } catch (e) {
       Get.snackbar('Error', e.toString());
       return null;
     }
+  }
+
+  Future<bool> sharedPrefState() async {
+    return await SharedPreferenceHelper.getStartDestination();
   }
 
   Future<void> resetPassword(String email) async {
@@ -79,7 +89,11 @@ class ApiProvider extends GetConnect {
           await auth.signInWithCredential(credential);
 
       Get.snackbar('Success', 'Successfully logged in');
-      Get.offAllNamed(Routes.SELECT_HABITS);
+      bool navigateHome = await sharedPrefState();
+
+      navigateHome
+          ? Get.offAllNamed(Routes.MAIN)
+          : Get.offAllNamed(Routes.SELECT_HABITS);
       return userCredential.user;
     } catch (e) {
       Get.snackbar('Error', e.toString());
@@ -92,13 +106,11 @@ class ApiProvider extends GetConnect {
       final snapShot =
           await FirebaseFirestore.instance.collection('habits').get();
 
-      print('Number of docs --------->${snapShot.docs.length}');
       return snapShot.docs
           .map((doc) => HabitTypes.fromJson(doc.data(), docId: doc.id))
           .toList();
     } catch (e) {
       Get.snackbar('Error', e.toString());
-      print('----------> the error is ${e.toString()}');
       return null;
     }
   }
@@ -156,6 +168,22 @@ class ApiProvider extends GetConnect {
 
       activity.docId = docRef.id;
       await docRef.update({'doc_id': activity.docId});
+
+      var date = activity.activityDate; // in this format 2025-01-09
+      var time = activity.activityToTime; // in the format 09:55
+
+      final parsedDate = DateTime.parse(date);
+
+      final timeParts = time.split(':');
+      final hour = int.parse(timeParts[0]);
+      final minute = int.parse(timeParts[1]);
+
+      final activityDateTime = DateTime(
+          parsedDate.year, parsedDate.month, parsedDate.day, hour, minute);
+
+      final notificationTime = activityDateTime.subtract(Duration(minutes: 30));
+      NotificationService.scheduleNotification('Get ready!',
+          '${activity.activityTitle} in 30 minutes', notificationTime);
     } catch (e) {
       Get.snackbar('Error', e.toString());
     }
@@ -244,8 +272,8 @@ class ApiProvider extends GetConnect {
       String userId, DateTime currentDate) async {
     try {
       final firstDayOfMonth = DateTime(currentDate.year, currentDate.month, 1);
-      final lastDayOfMonth = DateTime(
-          currentDate.year, currentDate.month + 1, 0);
+      final lastDayOfMonth =
+          DateTime(currentDate.year, currentDate.month + 1, 0);
 
       String startDate = "${firstDayOfMonth.year}-"
           "${firstDayOfMonth.month.toString().padLeft(2, '0')}-"
@@ -265,7 +293,7 @@ class ApiProvider extends GetConnect {
 
       List<HabitActivity> activities = querySnapshot.docs
           .map((doc) =>
-          HabitActivity.fromJson(doc.data() as Map<String, dynamic>))
+              HabitActivity.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
 
       return activities;
@@ -274,5 +302,4 @@ class ApiProvider extends GetConnect {
       return null;
     }
   }
-
 }

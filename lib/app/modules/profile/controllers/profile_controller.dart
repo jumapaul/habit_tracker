@@ -1,9 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:habit_tracker/app/data/providers/api_provider.dart';
+import 'package:habit_tracker/app/data/providers/shared_preference.dart';
+
+import '../../../routes/app_pages.dart';
 
 class ProfileController extends GetxController {
-  //TODO: Implement ProfileScreenController
+  final user = FirebaseAuth.instance.currentUser;
+  final ApiProvider apiProvider = ApiProvider();
 
-  final count = 0.obs;
+  void logOut() {
+    apiProvider.signOut();
+    Get.offAllNamed(Routes.SIGN_IN);
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -18,6 +28,4 @@ class ProfileController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

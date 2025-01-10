@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:habit_tracker/app/modules/home/views/home_view.dart';
 import 'package:habit_tracker/app/modules/profile/views/profile_view.dart';
-import 'package:habit_tracker/app/modules/reports/views/reports_view.dart';
 import 'package:habit_tracker/app/modules/stats/views/stats_view.dart';
 
 import '../controllers/main_controller.dart';
@@ -19,7 +18,6 @@ class MainView extends GetView<MainController> {
         body: [
           HomeView(),
           StatsView(),
-          ReportsView(),
           ProfileView()
         ][controller.selectedTab.value],
         bottomNavigationBar: AnimatedBottomNavigationBar.builder(
@@ -27,7 +25,7 @@ class MainView extends GetView<MainController> {
           height: 63,
           backgroundColor: Colors.transparent,
           notchSmoothness: NotchSmoothness.softEdge,
-          itemCount: 4,
+          itemCount: 3,
           activeIndex: controller.selectedTab.value,
           gapWidth: 10,
           splashRadius: 0,

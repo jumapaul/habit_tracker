@@ -5,6 +5,7 @@ import 'package:habit_tracker/app/common/custom_theme/container_border_theme.dar
 import 'package:habit_tracker/app/common/dimens/dimens.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../../../data/models/activity_group.dart';
 import '../controllers/stats_controller.dart';
 
 class StatsView extends GetView<StatsController> {
@@ -24,72 +25,78 @@ class StatsView extends GetView<StatsController> {
           padding: EdgeInsets.all(10),
           child: Obx(() {
             var habits = controller.dailyActivityByCategory;
-            return habits.isEmpty
-                ? Center(
-                    child: Text('No report yet'),
-                  )
-                : SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Today, ${controller.currentDay}',
+                        style: AppTextStyles.subHeaderStyle,
+                      ),
+                      _buildReportPeriod(),
+                    ],
+                  ),
+                  AppTextStyles.mediumVerticalSpacing,
+                  habits.isEmpty
+                      ? Center(
+                          child: Text(
+                          'No reports yet',
+                          style: AppTextStyles.largeSubHeaderStyle,
+                        ))
+                      : Column(
                           children: [
-                            Text(
-                              'Today, ${controller.currentDay}',
-                              style: AppTextStyles.subHeaderStyle,
+                            GridView.builder(
+                              itemBuilder: (context, index) {
+                                var category = habits[index];
+                                return _buildCategoryReport(
+                                    category.categoryIconUrl,
+                                    category.category,
+                                    category.totalDuration,
+                                    context);
+                              },
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing: 10,
+                                      crossAxisSpacing: 10),
+                              shrinkWrap: true,
+                              itemCount: habits.length,
                             ),
-                            _buildReportPeriod(),
+                            AppTextStyles.mediumVerticalSpacing,
+                            Text(
+                              'Statistics',
+                              style: AppTextStyles.largeSubHeaderStyle,
+                            ),
+                            AppTextStyles.mediumVerticalSpacing,
+                            _buildDailyReportSection(
+                                controller.dailyActivityByCategory),
+                            AppTextStyles.mediumVerticalSpacing,
+                            Text(
+                              'Insights',
+                              style: AppTextStyles.largeSubHeaderStyle,
+                            ),
+                            AppTextStyles.mediumVerticalSpacing,
+                            _insightWidget(
+                                'assets/images/happy.png',
+                                'Best category',
+                                controller.highestDurationCategoryName.value,
+                                Colors.orangeAccent,
+                                controller.highestDurationValue.value),
+                            AppTextStyles.mediumVerticalSpacing,
+                            _insightWidget(
+                                'assets/images/sad.png',
+                                'Worst category',
+                                controller.lowestDurationCategoryName.value,
+                                Colors.red.shade300,
+                                controller.lowestDurationValue.value)
                           ],
-                        ),
-                        AppTextStyles.mediumVerticalSpacing,
-                        GridView.builder(
-                          itemBuilder: (context, index) {
-                            var category = habits[index];
-                            return _buildCategoryReport(
-                                category.categoryIconUrl,
-                                category.category,
-                                category.totalDuration,
-                                context);
-                          },
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 10),
-                          shrinkWrap: true,
-                          itemCount: habits.length,
-                        ),
-                        AppTextStyles.mediumVerticalSpacing,
-                        Text(
-                          'Statistics',
-                          style: AppTextStyles.largeSubHeaderStyle,
-                        ),
-                        AppTextStyles.mediumVerticalSpacing,
-                        _buildDailyReportSection(
-                            controller.dailyActivityByCategory),
-                        AppTextStyles.mediumVerticalSpacing,
-                        Text(
-                          'Insights',
-                          style: AppTextStyles.largeSubHeaderStyle,
-                        ),
-                        AppTextStyles.mediumVerticalSpacing,
-                        _insightWidget(
-                            'assets/images/happy.png',
-                            'Best category',
-                            controller.highestDurationCategoryName.value,
-                            Colors.orangeAccent,
-                            controller.highestDurationValue.value),
-                        AppTextStyles.mediumVerticalSpacing,
-                        _insightWidget(
-                            'assets/images/sad.png',
-                            'Worst category',
-                            controller.lowestDurationCategoryName.value,
-                            Colors.red.shade300,
-                            controller.lowestDurationValue.value)
-                      ],
-                    ),
-                  );
+                        )
+                ],
+              ),
+            );
           }),
         ));
   }
@@ -116,8 +123,8 @@ class StatsView extends GetView<StatsController> {
     return DropdownButton<String>(
         value: controller.reportPeriod.value,
         icon: const Icon(Icons.arrow_drop_down_rounded),
+        elevation: 0,
         iconSize: 24,
-        elevation: 16,
         underline: Container(),
         items: <String>['Monthly', 'Weekly', 'Daily']
             .map<DropdownMenuItem<String>>((String value) {
@@ -125,6 +132,7 @@ class StatsView extends GetView<StatsController> {
         }).toList(),
         onChanged: (String? newValue) {
           if (newValue == 'Weekly') {
+            controller.reportPeriod.value = newValue!;
             controller.getWeeklyReport();
           } else if (newValue == 'Monthly') {
             controller.getMonthlyReport();
@@ -191,12 +199,4 @@ class StatsView extends GetView<StatsController> {
       ],
     );
   }
-}
-
-class StatusInfo {
-  StatusInfo(this.name, this.totalTime, [this.color]);
-
-  final String name;
-  final int totalTime;
-  final Color? color;
 }

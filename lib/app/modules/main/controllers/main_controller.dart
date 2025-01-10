@@ -8,7 +8,6 @@ class MainController extends GetxController {
   var navItems = [
     NavItem('Home', Icons.home),
     NavItem('Analytics', Icons.stacked_bar_chart),
-    NavItem('History', Icons.stacked_line_chart_rounded),
     NavItem('Profile', Icons.person_2_outlined),
   ];
 

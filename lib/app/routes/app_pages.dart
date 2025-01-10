@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
+import 'package:habit_tracker/app/data/providers/api_provider.dart';
 import 'package:habit_tracker/app/data/providers/shared_preference.dart';
 
 import '../modules/auth/sign_in/bindings/sign_in_binding.dart';
@@ -11,8 +14,6 @@ import '../modules/main/bindings/main_binding.dart';
 import '../modules/main/views/main_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
-import '../modules/reports/bindings/reports_binding.dart';
-import '../modules/reports/views/reports_view.dart';
 import '../modules/select_habits/bindings/select_habits_binding.dart';
 import '../modules/select_habits/views/select_habits_view.dart';
 import '../modules/stats/bindings/stats_binding.dart';
@@ -27,10 +28,10 @@ class AppPages {
   static const main = Routes.MAIN;
 
   static Future<String> getInitialRoute() async {
-    final startDestinationHome =
-        await SharedPreferenceHelper.getStartDestination();
+    await Firebase.initializeApp();
+    final user = await ApiProvider.auth.currentUser;
 
-    return startDestinationHome ? main : signIn;
+    return user != null ? main : signIn;
   }
 
   static final routes = [
@@ -38,11 +39,6 @@ class AppPages {
       name: _Paths.HOME,
       page: () => const HomeView(),
       binding: HomeBinding(),
-    ),
-    GetPage(
-      name: _Paths.REPORTS_SCREEN,
-      page: () => const ReportsView(),
-      binding: ReportsBinding(),
     ),
     GetPage(
       name: _Paths.PROFILE_SCREEN,

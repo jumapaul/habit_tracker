@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../data/models/activity_group.dart';
 import '../../../data/models/habit_activity.dart';
 import '../../../data/providers/api_provider.dart';
 
@@ -139,17 +140,3 @@ class StatsController extends GetxController {
   }
 }
 
-class ActivityGroup {
-  final String category;
-  final List<HabitActivity> activities;
-  final int totalCount;
-  final int totalDuration;
-  final String categoryIconUrl;
-
-  ActivityGroup(
-      {required this.category,
-      required this.activities,
-      required this.totalCount,
-      required this.totalDuration,
-      required this.categoryIconUrl});
-}
