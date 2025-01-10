@@ -4,28 +4,28 @@
 The final app looks like this:
 
 #### Auth
-| Sign up page | Sign in page | Reset password page | Google sign in page |
-|----------------|----------------|----------------|-----------------------|
+| Sign up page                          | Sign in page                          | Reset password page                           | Google sign in page                          |
+|---------------------------------------|---------------------------------------|-----------------------------------------------|----------------------------------------------|
 | ![Sign up screen](images/sign_up.png) | ![Sign in screen](images/sign_in.png) | ![Reset password](images/forgot_password.png) | ![Google sign in](images/google_sign_in.png) |
 
-#### Home Screen      
-| Choose habit page | Home page | Add activity page |   |
-|----------------|----------------|----------------|-----------------------|
-| ![choose habits image](images/choose_habit.png)  |  ![home screen image](images/home.png)  |  ![add activity](images/add_activity.png)  |
+#### Home Screen
+| Choose habit page                               | Home page                             | Add activity page                        |   |
+|-------------------------------------------------|---------------------------------------|------------------------------------------|---|
+| ![choose habits image](images/choose_habit.png) | ![home screen image](images/home.png) | ![add activity](images/add_activity.png) |
 
-### Report Screen  
-| Daily report | Weekly report | Specific day activity |  |
-|----------------|----------------|----------------|-----------------------|    
-![Daily Report screen image](images/daily_report.png)  | ![weekly report screen image](images/weekly_report.png)  |  ![specific day activity](images/see_date_activity.png) |  |
+### Report Screen
+| Daily report                                          | Weekly report                                           | Specific day activity                                  |  |
+|-------------------------------------------------------|---------------------------------------------------------|--------------------------------------------------------|--|    
+| ![Daily Report screen image](images/daily_report.png) | ![weekly report screen image](images/weekly_report.png) | ![specific day activity](images/see_date_activity.png) |  |
 
-### Notification Screen  
+### Notification Screen
 
 ![Notification screen image](images/notification.png)
 
 
 ### Profile screen
 
-![Profile screen image](images/profile.png)  |  |    |
+![Profile screen image](images/profile.png)
 
 
 ### Prerequisites
@@ -51,7 +51,7 @@ The final app looks like this:
 ```
 
 ### Background
-Develop a Gamified Habit Tracker App in Flutter that works on both mobile(Android/iOS) and web. 
+Develop a Gamified Habit Tracker App in Flutter that works on both mobile(Android/iOS) and web.
 - The project should demonstrate proficiency in Flutter development, responsive design, CI/CD pipelines, and modern development best practices.
 
 #### Core features
@@ -79,19 +79,22 @@ NB: In this project, only sign in with google is Implemented.
 ## Tech-stack
 
 * Framework
-    * [Flutter](https://flutter.dev/) - a cross-platform, statically typed, general-purpose programming language with type inference.
+  * [Flutter](https://flutter.dev/) - a cross-platform, statically typed, general-purpose programming language with type inference.
 
 * State management
-    * [Getx](https://chornthorn.github.io/getx-docs/) - For state management, navigation, and dependency injection.
+  * [Getx](https://chornthorn.github.io/getx-docs/) - For state management, navigation, and dependency injection.
 
 * Backend Services:
-    * [Firebase](https://console.firebase.google.com/u/0/) - Firebase auth, firebase appdistribution and Firebase firestore
+  * [Firebase](https://console.firebase.google.com/u/0/) - Firebase auth, firebase appdistribution and Firebase firestore
 
 * Tests
-    * [Mockito]() - For mocking dependencies during unit tests.
+  * [Mockito]() - For mocking dependencies during unit tests.
 
 * CI/CD
-    * Github Actions
+  * Github Actions
+
+![actions](images/github_action.png)
+
 
 ## Dependencies
 
