@@ -38,20 +38,15 @@ class ProfileView extends GetView<ProfileController> {
                     ),
                   ),
                 ),
+                AppTextStyles.smallVerticalSpacing,
                 Text(
                   user?.displayName ?? 'John doe',
                   style: AppTextStyles.largeSubHeaderStyle,
                 ),
-                AppTextStyles.mediumVerticalSpacing,
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 1, color: Colors.grey.shade200)),
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(user!.email!),
-                  ),
+                AppTextStyles.smallVerticalSpacing,
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(user!.email!),
                 ),
                 AppTextStyles.mediumVerticalSpacing,
                 Container(

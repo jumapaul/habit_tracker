@@ -36,7 +36,7 @@ class StatsView extends GetView<StatsController> {
                         'Today, ${controller.currentDay}',
                         style: AppTextStyles.subHeaderStyle,
                       ),
-                      _buildReportPeriod(),
+                      _buildReportPeriod(context),
                     ],
                   ),
                   AppTextStyles.mediumVerticalSpacing,
@@ -127,7 +127,15 @@ class StatsView extends GetView<StatsController> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(width: 80, height: 80, child: Image.network(imageUrl)),
+          SizedBox(
+              width: 50,
+              height: 50,
+              child: Image.network(
+                imageUrl,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Theme.of(context).primaryColor.withOpacity(0.7),
+              )),
           Text(category),
           Text('$duration hours')
         ],
@@ -135,14 +143,16 @@ class StatsView extends GetView<StatsController> {
     );
   }
 
-  _buildReportPeriod() {
+  _buildReportPeriod(context) {
     return DropdownButton<String>(
       value: controller.reportPeriod.value,
       icon: const Icon(Icons.arrow_drop_down_rounded),
       elevation: 0,
       iconSize: 24,
       underline: Container(),
-      dropdownColor: Color(0xffF2F2F2),
+      dropdownColor: Theme.of(context).brightness == Brightness.dark
+          ? Colors.grey
+          : Color(0xffF2F2F2),
       items: <String>['Monthly', 'Weekly', 'Daily']
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem(value: value, child: Text(value));

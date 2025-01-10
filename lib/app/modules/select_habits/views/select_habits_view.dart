@@ -101,7 +101,14 @@ class SelectHabitsView extends GetView<SelectHabitsController> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                  height: 100, width: 100, child: Image.network(image_url)),
+                  height: 50,
+                  width: 50,
+                  child: Image.network(
+                    image_url,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Theme.of(context).primaryColor.withOpacity(0.7),
+                  )),
               AppTextStyles.mediumVerticalSpacing,
               Text(
                 name,

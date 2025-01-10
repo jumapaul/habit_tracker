@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:habit_tracker/app/common/dimens/dimens.dart';
 
 class SocialAuthWidget extends StatelessWidget {
@@ -19,36 +20,23 @@ class SocialAuthWidget extends StatelessWidget {
           height: mediumSize,
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GestureDetector(
-              onTap: onGoogleTap,
-              child: _buildSocialAuth('Google', 'assets/images/google.png'),
-            ),
-            _buildSocialAuth('Facebook', 'assets/images/facebook.png')
+            _buildSocialAuth('assets/images/google.png', onGoogleTap),
+            AppTextStyles.mediumHorizontalSpacing,
+            AppTextStyles.mediumHorizontalSpacing,
+            _buildSocialAuth('assets/images/facebook.png', () {})
           ],
         ),
       ],
     );
   }
 
-  _buildSocialAuth(String title, String path) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: 40,
-          width: 40,
-          child: Image.asset(path),
-        ),
-        SizedBox(
-          width: 5,
-        ),
-        Text(
-          title,
-          style: AppTextStyles.subHeaderStyle,
-        )
-      ],
+  _buildSocialAuth(String path, clicked()) {
+    return CircleAvatar(
+      radius: 30,
+      backgroundColor: Get.theme.colorScheme.surface,
+      child: IconButton(onPressed: clicked, icon: Image.asset(path)),
     );
   }
 }

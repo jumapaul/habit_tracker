@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class OutlinedButtonWidget extends StatelessWidget {
   final VoidCallback onClick;
@@ -15,7 +16,7 @@ class OutlinedButtonWidget extends StatelessWidget {
       height: 50,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Get.theme.colorScheme.primary,
           side: BorderSide(color: Theme.of(context).primaryColor),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),

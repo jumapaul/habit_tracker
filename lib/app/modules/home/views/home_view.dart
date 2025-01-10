@@ -125,8 +125,12 @@ class HomeView extends GetView<HomeController> {
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   decoration: BoxDecoration(
                       color: isSelected
-                          ? Theme.of(context).primaryColor.withOpacity(0.2)
-                          : Colors.white,
+                          ? (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey
+                              : Theme.of(context).primaryColor.withOpacity(0.5))
+                          : (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.black
+                              : Colors.white),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                           color: isSelected
@@ -288,20 +292,39 @@ class HomeView extends GetView<HomeController> {
         border: Theme.of(context).extension<ContainerBorderTheme>()!.border,
       ),
       height: 200,
-      child: Stack(
+      child: Column(
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Checkbox(
+                value: isComplete,
+                onChanged: (value) {
+                  controller.updateActivity(
+                      activity.docId!, value!, activity.activityTitle);
+                },
+              ),
+            ],
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                  height: 70,
-                  width: 70,
-                  child: Image.network(activity.activityCategoryIcon)),
+                  height: 50,
+                  width: 50,
+                  child: Image.network(
+                    activity.activityCategoryIcon,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Theme.of(context).primaryColor.withOpacity(0.7),
+                  )),
+              AppTextStyles.smallVerticalSpacing,
               Text(
                 activity.activityTitle,
                 style: AppTextStyles.largeSubHeaderStyle,
               ),
-              AppTextStyles.mediumVerticalSpacing,
+              AppTextStyles.smallVerticalSpacing,
               Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
@@ -311,17 +334,6 @@ class HomeView extends GetView<HomeController> {
               )
             ],
           ),
-          Positioned(
-            top: 0,
-            right: 0,
-            child: Checkbox(
-              value: isComplete,
-              onChanged: (value) {
-                controller.updateActivity(
-                    activity.docId!, value!, activity.activityTitle);
-              },
-            ),
-          )
         ],
       ),
     );

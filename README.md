@@ -1,27 +1,31 @@
-## Safeboda Interview Solution
+## SOLUTECH Interview Solution
 
 👀  Solution code for the habit tracker app for crossplatform using [flutter](https://flutter.dev/).
 The final app looks like this:
 
 #### Auth
-|  |  |  |  |
+| Sign up page | Sign in page | Reset password page | Google sign in page |
 |----------------|----------------|----------------|-----------------------|
 | ![Sign up screen](images/sign_up.png) | ![Sign in screen](images/sign_in.png) | ![Reset password](images/forgot_password.png) | ![Google sign in](images/google_sign_in.png) |
 
-
 #### Home Screen      
-|  |  |  |  |
+| Choose habit page | Home page | Add activity page |   |
 |----------------|----------------|----------------|-----------------------|
-![choose habits image](images/choose_habit.png)  |  ![home screen image](images/home.png)  | ![add activity image](images/add_activity.png)
+| ![choose habits image](images/choose_habit.png)  |  ![home screen image](images/home.png)  |  ![add activity](images/add_activity.png)  |
 
 ### Report Screen  
-|  |  |  |  |
+| Daily report | Weekly report | Specific day activity |  |
 |----------------|----------------|----------------|-----------------------|    
-![Daily Report screen image](images/daily_report.png)  | ![weekly report screen image](images/weekly_report.png)
+![Daily Report screen image](images/daily_report.png)  | ![weekly report screen image](images/weekly_report.png)  |  ![specific day activity](images/see_date_activity.png) |  |
+
+### Notification Screen  
+
+![Notification screen image](images/notification.png)
+
 
 ### Profile screen
 
-![Profile screen image](images/profile.png)  |  
+![Profile screen image](images/profile.png)  |  |    |
 
 
 ### Prerequisites
@@ -82,13 +86,10 @@ NB: In this project, only sign in with google is Implemented.
 
 * Backend Services:
     * [Firebase](https://console.firebase.google.com/u/0/) - Firebase auth, firebase appdistribution and Firebase firestore
-* Architecture
-    * MVVM - Model View View Model
+
 * Tests
     * [Mockito]() - For mocking dependencies during unit tests.
-    * [MockK](https://github.com/mockk) - mocking library for Kotlin
-    * [Kluent](https://github.com/MarkusAmshove/Kluent) - Fluent Assertion-Library for Kotlin
-    * [Kakao](https://github.com/agoda-com/Kakao) - Nice and simple DSL for Espresso in Kotlin
+
 * CI/CD
     * Github Actions
 
