@@ -53,14 +53,14 @@ jobs:
       - name: Build APK
         run: |
           echo "Building APK..."
-          flutter build apk --debug
-          ls -la build/app/outputs/apk/debug/
+          flutter build apk --release
+          ls -la build/app/outputs/flutter-apk/
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v3
         with:
           name: release-apk
-          path: build/app/outputs/apk/release/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
 
       - name: Install Firebase CLI
@@ -72,13 +72,13 @@ jobs:
           FIREBASE_APP_ID: ${{secrets.APPID}}
         run: |
           echo "Uploading to Firebase App Distribution..."
-          if [ ! -f "build/app/outputs/apk/release/app-release.apk" ]; then
+          if [ ! -f "build/app/outputs/flutter-apk/app-release.apk" ]; then
             echo "Error: APK file not found at expected location"
-            ls -la build/app/outputs/apk/release/
+            ls -la build/app/outputs/flutter-apk/app-release.apk
             exit 1
           fi
           
-          firebase appdistribution:distribute "build/app/outputs/apk/release/app-release.apk" \
+          firebase appdistribution:distribute "build/app/outputs/flutter-apk/app-release.apk" \
             --app "$FIREBASE_APP_ID" \
             --token "$FIREBASE_TOKEN" \
             --groups "pre-tester" \
