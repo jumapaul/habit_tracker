@@ -7,10 +7,9 @@ class ActivityGroup {
   final int totalDuration;
   final String categoryIconUrl;
 
-  ActivityGroup(
-      {required this.category,
-        required this.activities,
-        required this.totalCount,
-        required this.totalDuration,
-        required this.categoryIconUrl});
+  ActivityGroup({required this.category,
+    required this.activities,
+    required this.totalCount,
+    required this.totalDuration,
+    required this.categoryIconUrl});
 }

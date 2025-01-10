@@ -161,6 +161,7 @@ class HomeView extends GetView<HomeController> {
       backgroundColor: Colors.white,
       Container(
         width: double.infinity,
+        margin: EdgeInsets.symmetric(horizontal: 12),
         child: Padding(
           padding: EdgeInsets.all(10),
           child: SingleChildScrollView(
@@ -244,7 +245,9 @@ class HomeView extends GetView<HomeController> {
                       ),
                     )
                   ],
-                )
+                ),
+                AppTextStyles.mediumVerticalSpacing,
+                AppTextStyles.mediumVerticalSpacing,
               ],
             ),
           ),

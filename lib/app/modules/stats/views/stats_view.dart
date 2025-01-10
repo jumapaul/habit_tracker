@@ -19,10 +19,10 @@ class StatsView extends GetView<StatsController> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Reports'),
-          centerTitle: true,
+          centerTitle: false,
         ),
         body: Padding(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           child: Obx(() {
             var habits = controller.dailyActivityByCategory;
             return SingleChildScrollView(
@@ -41,11 +41,27 @@ class StatsView extends GetView<StatsController> {
                   ),
                   AppTextStyles.mediumVerticalSpacing,
                   habits.isEmpty
-                      ? Center(
-                          child: Text(
-                          'No reports yet',
-                          style: AppTextStyles.largeSubHeaderStyle,
-                        ))
+                      ? Container(
+                          height: Get.height * 0.6,
+                          width: Get.width,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.hourglass_empty_sharp),
+                                  AppTextStyles.smallHorizontalSpacing,
+                                  Text(
+                                    'No reports yet',
+                                    style: AppTextStyles.largeSubHeaderStyle,
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        )
                       : Column(
                           children: [
                             GridView.builder(
@@ -121,25 +137,27 @@ class StatsView extends GetView<StatsController> {
 
   _buildReportPeriod() {
     return DropdownButton<String>(
-        value: controller.reportPeriod.value,
-        icon: const Icon(Icons.arrow_drop_down_rounded),
-        elevation: 0,
-        iconSize: 24,
-        underline: Container(),
-        items: <String>['Monthly', 'Weekly', 'Daily']
-            .map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem(value: value, child: Text(value));
-        }).toList(),
-        onChanged: (String? newValue) {
-          if (newValue == 'Weekly') {
-            controller.reportPeriod.value = newValue!;
-            controller.getWeeklyReport();
-          } else if (newValue == 'Monthly') {
-            controller.getMonthlyReport();
-          } else {
-            controller.getDailyReport();
-          }
-        });
+      value: controller.reportPeriod.value,
+      icon: const Icon(Icons.arrow_drop_down_rounded),
+      elevation: 0,
+      iconSize: 24,
+      underline: Container(),
+      dropdownColor: Color(0xffF2F2F2),
+      items: <String>['Monthly', 'Weekly', 'Daily']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem(value: value, child: Text(value));
+      }).toList(),
+      onChanged: (String? newValue) {
+        if (newValue == 'Weekly') {
+          controller.reportPeriod.value = newValue!;
+          controller.getWeeklyReport();
+        } else if (newValue == 'Monthly') {
+          controller.getMonthlyReport();
+        } else {
+          controller.getDailyReport();
+        }
+      },
+    );
   }
 
   _buildDailyReportSection(List<ActivityGroup> group) {
