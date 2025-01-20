@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:get/get.dart';
 import 'package:habit_tracker/app/common/utils/show_toast.dart';
 import 'package:habit_tracker/app/data/models/habit_activity.dart';
-import 'package:habit_tracker/app/data/providers/shared_preference.dart';
 import 'package:habit_tracker/app/services/notification_service.dart';
 import '../../routes/app_pages.dart';
 import '../models/habit.dart';
@@ -41,11 +41,9 @@ class ApiProvider extends GetConnect {
         password: password,
       );
       Get.snackbar('Success', 'Login successful');
-      bool navigateHome = await sharedPrefState();
+      var route = await startDestination();
 
-      navigateHome
-          ? Get.offAllNamed(Routes.MAIN)
-          : Get.offAllNamed(Routes.SELECT_HABITS);
+      Get.offAllNamed(route);
       return userCredential.user;
     } catch (e) {
       Get.snackbar('Error', e.toString());
@@ -53,8 +51,12 @@ class ApiProvider extends GetConnect {
     }
   }
 
-  Future<bool> sharedPrefState() async {
-    return await SharedPreferenceHelper.getStartDestination();
+  Future<String> startDestination() async {
+    var habits = await getSelectedHabits();
+
+    if (habits!.isNotEmpty) return Routes.MAIN;
+
+    return Routes.SELECT_HABITS;
   }
 
   Future<void> resetPassword(String email) async {
@@ -89,11 +91,9 @@ class ApiProvider extends GetConnect {
           await auth.signInWithCredential(credential);
 
       Get.snackbar('Success', 'Successfully logged in');
-      bool navigateHome = await sharedPrefState();
+      var route = await startDestination();
 
-      navigateHome
-          ? Get.offAllNamed(Routes.MAIN)
-          : Get.offAllNamed(Routes.SELECT_HABITS);
+      Get.offAllNamed(route);
       return userCredential.user;
     } catch (e) {
       Get.snackbar('Error', e.toString());
@@ -128,7 +128,7 @@ class ApiProvider extends GetConnect {
 
       for (var habit in selectedHabits) {
         final newHabit = habit.copyWith(id: userId);
-        final docRef = habitsRef.doc();
+        final docRef = habitsRef.doc(habit.title);
         batch.set(docRef, newHabit.toJson());
       }
 
@@ -136,6 +136,39 @@ class ApiProvider extends GetConnect {
       Get.offAllNamed(Routes.MAIN);
     } catch (error) {
       Get.snackbar('error', error.toString());
+    }
+  }
+
+  Future<void> updateSelectedCategory(List<HabitTypes> selectedHabits) async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      final habitsRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('selected_habits');
+
+      final batch = FirebaseFirestore.instance.batch();
+
+      final querySnapShot = await habitsRef.get();
+
+      for (var doc in querySnapShot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      for (var habit in selectedHabits) {
+        if (habit.title != null && habit.title.isNotEmpty) {
+          final docRef = habitsRef.doc(habit.title);
+          batch.set(docRef, habit.toJson());
+        }
+      }
+
+      await batch.commit();
+
+      Get.offAllNamed(Routes.MAIN);
+      Fluttertoast.showToast(msg: 'Updated');
+    } catch (error) {
+      print('===============>${error.toString()}');
+      Get.snackbar('Error', '${error.toString()}');
     }
   }
 

@@ -13,13 +13,13 @@ class StatsView extends GetView<StatsController> {
 
   @override
   Widget build(BuildContext context) {
-    if (!Get.isRegistered<StatsController>()) {
-      Get.lazyPut(() => StatsController());
-    }
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Reports'),
-          centerTitle: false,
+          title: Text(
+            'Reports',
+            style: AppTextStyles.largeSubHeaderStyle,
+          ),
+          centerTitle: true,
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
@@ -158,8 +158,8 @@ class StatsView extends GetView<StatsController> {
         return DropdownMenuItem(value: value, child: Text(value));
       }).toList(),
       onChanged: (String? newValue) {
+        controller.reportPeriod.value = newValue!;
         if (newValue == 'Weekly') {
-          controller.reportPeriod.value = newValue!;
           controller.getWeeklyReport();
         } else if (newValue == 'Monthly') {
           controller.getMonthlyReport();

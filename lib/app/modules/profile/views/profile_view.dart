@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:habit_tracker/app/common/dimens/dimens.dart';
 
+import '../../../routes/app_pages.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -10,10 +11,6 @@ class ProfileView extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    if (!Get.isRegistered<ProfileController>()) {
-      Get.lazyPut(() => ProfileController());
-    }
-
     var user = controller.user;
     return Scaffold(
       body: SafeArea(
@@ -56,7 +53,10 @@ class ProfileView extends GetView<ProfileController> {
                   ),
                   child: Column(
                     children: [
-                      _buildProfileItems(Icons.edit, 'Edit Profile'),
+                      GestureDetector(
+                        onTap: ()=>Get.toNamed(Routes.EDIT_CATEGORY),
+                        child:  _buildProfileItems(Icons.edit, 'Edit Categories'),
+                      ),
                       _buildProfileItems(Icons.settings, 'Settings'),
                       _buildProfileItems(
                           Icons.group_add_outlined, 'Invite friend'),

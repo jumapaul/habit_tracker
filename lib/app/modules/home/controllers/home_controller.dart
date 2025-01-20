@@ -7,6 +7,8 @@ import 'package:habit_tracker/app/data/models/habit_activity.dart';
 import 'package:habit_tracker/app/data/providers/api_provider.dart';
 import 'package:intl/intl.dart';
 
+import '../../stats/controllers/stats_controller.dart';
+
 class HomeController extends GetxController {
   var selectedDate = DateTime.now().obs;
   var currentDay = ''.obs;
@@ -21,10 +23,11 @@ class HomeController extends GetxController {
   var habitsCategory = RxList<HabitTypes>();
   var dailyActivity = RxList<HabitActivity>();
   var categoryIcon = ''.obs;
+  var user = FirebaseAuth.instance.currentUser;
+  var statsController = Get.put(StatsController());
 
   getHabitCategories() async {
     var selectedHabits = await apiProvider.getSelectedHabits();
-
     habitsCategory.value = selectedHabits!;
   }
 
@@ -64,6 +67,10 @@ class HomeController extends GetxController {
         .updateActivity(userId!, docId, isComplete, acivityTitle)
         .then((_) {
       fetchActivities();
+    }).then((_) {
+      statsController.getDailyReport();
+      statsController.getWeeklyReport();
+      statsController.getMonthlyReport();
     });
   }
 
@@ -154,12 +161,6 @@ class HomeController extends GetxController {
 
   @override
   void onClose() {
-    habitTitleController.dispose();
-    categoryController.dispose();
-    habitDescriptionController.dispose();
-    dateController.dispose();
-    fromTimeController.dispose();
-    toTimeController.dispose();
     super.onClose();
   }
 }

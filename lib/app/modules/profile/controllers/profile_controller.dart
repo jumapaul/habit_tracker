@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:habit_tracker/app/data/providers/api_provider.dart';
-import 'package:habit_tracker/app/data/providers/shared_preference.dart';
-
 import '../../../routes/app_pages.dart';
 
 class ProfileController extends GetxController {

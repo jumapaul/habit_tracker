@@ -15,9 +15,7 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    if (!Get.isRegistered<HomeController>()) {
-      Get.lazyPut(() => HomeController());
-    }
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -31,15 +29,11 @@ class HomeView extends GetView<HomeController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          DateTime scheduleDate =
-                              DateTime.now().add(Duration(seconds: 3));
-                          NotificationService.scheduleNotification(
-                              'Time', 'Get ready', scheduleDate);
-                        },
-                        child: _buildTopBarIcons(Icons.person, context),
-                      ),
+              //     DateTime scheduleDate =
+              //     DateTime.now().add(Duration(seconds: 3));
+              // NotificationService.scheduleNotification(
+              //     'Time', 'Get ready', scheduleDate);
+                      _buildTopBarIcons(Icons.person, context),
                       Text(controller.currentDay.value),
                       GestureDetector(
                         onTap: () => controller.selectViewDate(context),
@@ -262,6 +256,7 @@ class HomeView extends GetView<HomeController> {
 
   _buildDropDownMenuForCategory(List<HabitTypes> habits, BuildContext context) {
     return DropdownMenu<HabitTypes>(
+      alignmentOffset: Offset(40, -40),
         controller: controller.categoryController,
         width: double.infinity,
         hintText: 'Select Category',
@@ -281,7 +276,8 @@ class HomeView extends GetView<HomeController> {
             habits.map<DropdownMenuEntry<HabitTypes>>((HabitTypes habit) {
           return DropdownMenuEntry<HabitTypes>(
               value: habit, label: habit.title);
-        }).toList());
+        }).toList(),
+    );
   }
 
   _buildActivityWidget(

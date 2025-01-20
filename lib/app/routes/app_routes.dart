@@ -11,6 +11,7 @@ abstract class Routes {
   static const SIGN_IN = _Paths.SIGN_IN;
   static const SIGN_UP = _Paths.SIGN_UP;
   static const SELECT_HABITS = _Paths.SELECT_HABITS;
+  static const EDIT_CATEGORY = _Paths.EDIT_CATEGORY;
 }
 
 abstract class _Paths {
@@ -23,4 +24,5 @@ abstract class _Paths {
   static const SIGN_IN = '/sign-in';
   static const SIGN_UP = '/sign-up';
   static const SELECT_HABITS = '/select-habits';
+  static const EDIT_CATEGORY = '/edit';
 }

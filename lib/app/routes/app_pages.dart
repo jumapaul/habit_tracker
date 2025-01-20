@@ -1,13 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
-import 'package:habit_tracker/app/data/providers/api_provider.dart';
-import 'package:habit_tracker/app/data/providers/shared_preference.dart';
 
+import '../data/providers/api_provider.dart';
+import '../data/providers/shared_preference.dart';
 import '../modules/auth/sign_in/bindings/sign_in_binding.dart';
 import '../modules/auth/sign_in/views/sign_in_view.dart';
 import '../modules/auth/sign_up/bindings/sign_up_binding.dart';
 import '../modules/auth/sign_up/views/sign_up_view.dart';
+import '../modules/edit/bindings/edit_category_binding.dart';
+import '../modules/edit/views/edit_category_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/main/bindings/main_binding.dart';
@@ -68,6 +70,11 @@ class AppPages {
       name: _Paths.SELECT_HABITS,
       page: () => const SelectHabitsView(),
       binding: SelectHabitsBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_CATEGORY,
+      page: () => const EditCategoryView(),
+      binding: EditCategoryBinding(),
     ),
   ];
 }
