@@ -49,7 +49,7 @@ class HomeController extends GetxController {
           activityToTime: toTimeController.text,
           userId: userId!,
           isCompleted: false);
-      await apiProvider.createActivity(userId, body).then((value) {
+      await apiProvider.createActivity(userId, body).then((_) {
         fetchActivities();
         clearController();
         Get.back();

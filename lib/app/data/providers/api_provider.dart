@@ -33,6 +33,8 @@ class ApiProvider extends GetConnect {
     }
   }
 
+
+  //Demonstration
   Future<User?> signInWithEmail(String email, String password) async {
     try {
       final UserCredential userCredential =
@@ -214,7 +216,7 @@ class ApiProvider extends GetConnect {
       final activityDateTime = DateTime(
           parsedDate.year, parsedDate.month, parsedDate.day, hour, minute);
 
-      final notificationTime = activityDateTime.subtract(Duration(minutes: 30));
+      final notificationTime = activityDateTime.subtract(Duration(seconds: 5));
       NotificationService.scheduleNotification('Get ready!',
           '${activity.activityTitle} in 30 minutes', notificationTime);
     } catch (e) {
